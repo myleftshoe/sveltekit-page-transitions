@@ -1,8 +1,8 @@
 {
   "name": "sveltekit-page-transitions",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.3",
   "license": "MIT",
+  "homepage": "https://github.com/myleftshoe/sveltekit-page-transitions",
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/kit": "next",
