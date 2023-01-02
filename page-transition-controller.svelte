@@ -1,11 +1,9 @@
 <script>
-    import { setContext } from 'svelte'
     import { beforeNavigate, afterNavigate } from '$app/navigation'
     import { back, transition as storeTransition } from './store'
 
     export let transition = $storeTransition
     $storeTransition = transition
-    setContext('transition', storeTransition)
 
     let updateBack = true
     function setBack(condition = false) {
@@ -16,6 +14,7 @@
 
     beforeNavigate(({ to }) => {
         setBack(to.url.pathname === '/' || to.url.pathname === '/home')
+        ref.firstElementChild.style.zIndex = $back ? 1 : 0
     })
 
     afterNavigate(() => {
@@ -25,11 +24,13 @@
     function popState(e) {
         setBack(true)
     }
+
+    let ref
 </script>
 
 <svelte:window on:popstate={popState} />
 
-<div>
+<div bind:this={ref}>
     <slot />
 </div>
 

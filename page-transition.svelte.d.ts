@@ -2,7 +2,7 @@
 /** @typedef {typeof __propDef.events}  PageTransitionEvents */
 /** @typedef {typeof __propDef.slots}  PageTransitionSlots */
 export default class PageTransition extends SvelteComponentTyped<{
-    gridArea?: string;
+    [x: string]: never;
 }, {
     [evt: string]: CustomEvent<any>;
 }, {
@@ -15,7 +15,7 @@ export type PageTransitionSlots = typeof __propDef.slots;
 import { SvelteComponentTyped } from "svelte";
 declare const __propDef: {
     props: {
-        gridArea?: string;
+        [x: string]: never;
     };
     events: {
         [evt: string]: CustomEvent<any>;
