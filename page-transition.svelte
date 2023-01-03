@@ -4,7 +4,7 @@
     $: ({ inFunc, inOptions, outFunc, outOptions } = $transition($back))
 </script>
 
-<div in:inFunc={inOptions} out:outFunc={outOptions} style="--z: {-Number($back)}">
+<div in:inFunc={inOptions} out:outFunc={outOptions} style="--z: {Number($back)}">
     <slot />
 </div>
 
@@ -14,7 +14,7 @@
         width: 100%;
         height: 100%;
     }
-    div:nth-child(2) {
+    div:first-child {
         z-index: var(--z);
     }
 </style>
