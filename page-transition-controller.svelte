@@ -5,19 +5,17 @@
     export let transition = $storeTransition
     $storeTransition = transition
 
-    let ref
     let popped = false
 
     beforeNavigate(({ to }) => {
         $back = popped || to.url.pathname === '/' || to.url.pathname === '/home'
-        ref.firstElementChild.style.zIndex = $back ? 1 : 0
         popped = false
     })
 </script>
 
 <svelte:window on:popstate={() => (popped = true)} />
 
-<div bind:this={ref}>
+<div>
     <slot />
 </div>
 
