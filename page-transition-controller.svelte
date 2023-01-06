@@ -35,19 +35,6 @@
         }
         $back = popped || rootPaths.includes(pathname)
         popped = false
-        if (type === 'link') {
-            cancel()
-            goto(to.url.pathname, { replaceState: true })
-            return
-        }
-        if (to.url.pathname === from.url.pathname) {
-            popped = true
-            cancel()
-            goto(navHistory.pop() || '/', { replaceState: true })
-            return
-        }
-        popped = false
-        navHistory.push(to.url.pathname)
     })
 
     function handlePopstate() {
