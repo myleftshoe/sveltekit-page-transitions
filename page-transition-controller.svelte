@@ -1,19 +1,61 @@
 <script>
-    import { beforeNavigate } from '$app/navigation'
+    import { onMount } from 'svelte'
+    import { beforeNavigate, goto } from '$app/navigation'
     import { back, transition as storeTransition } from './store'
 
     export let transition = $storeTransition
     $storeTransition = transition
 
-    let popped = false
-
-    beforeNavigate(({ to }) => {
-        $back = popped || to.url.pathname === '/' || to.url.pathname === '/home'
-        popped = false
+    let rootPaths = ['/', '/home']
+    onMount(() => {
+        rootPaths = rootPaths.map((path) => `${window.location.pathname}${path.slice(1)}`)
     })
+
+    let popped = false
+    const navHistory = []
+
+    const isInStandaloneMode = () =>
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone ||
+        document.referrer.includes('android-app://')
+
+    beforeNavigate(({ to, from, type, cancel }) => {
+        let pathname = to?.url?.pathname || rootPaths[0]
+        if (isInStandaloneMode()) {
+            if (type === 'link') {
+                cancel()
+                if (pathname === from.url.pathname) {
+                    pathname = navHistory.pop() || rootPaths[0]
+                    popped = true
+                }
+                goto(pathname, { replaceState: true })
+                return
+            }
+            if (!popped) navHistory.push(from.url.pathname)
+        }
+        $back = popped || rootPaths.includes(pathname)
+        popped = false
+        if (type === 'link') {
+            cancel()
+            goto(to.url.pathname, { replaceState: true })
+            return
+        }
+        if (to.url.pathname === from.url.pathname) {
+            popped = true
+            cancel()
+            goto(navHistory.pop() || '/', { replaceState: true })
+            return
+        }
+        popped = false
+        navHistory.push(to.url.pathname)
+    })
+
+    function handlePopstate() {
+        if (!isInStandaloneMode()) popped = true
+    }
 </script>
 
-<svelte:window on:popstate={() => (popped = true)} />
+<svelte:window on:popstate={handlePopstate} />
 
 <div>
     <slot />
@@ -22,7 +64,7 @@
 <style>
     div {
         display: grid;
-        height: 100vh;
+        height: 100dvh;
         overflow: hidden;
         grid-template: 'page' 1fr;
     }
